@@ -1,5 +1,5 @@
 global:
-  domain: fix-gateway.alice-platform.com
+  domain: fix-gateway.alicelaw.net
 frontend:
   replicas: 2
   image: fix-gateway/frontend:latest
