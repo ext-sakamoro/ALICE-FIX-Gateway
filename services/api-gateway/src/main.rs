@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use axum::{
     body::Body,
     extract::{Request, State},
@@ -150,7 +151,7 @@ async fn forward(url: &str, req: Request) -> Result<Response, (StatusCode, Json<
     let q = req.uri().query().map(|q| format!("?{q}")).unwrap_or_default();
     let method = req.method().clone();
     let hdrs = req.headers().clone();
-    let body = axum::body::to_bytes(req.into_body(), 1 * 1024 * 1024).await
+    let body = axum::body::to_bytes(req.into_body(), 1024 * 1024).await
         .map_err(|e| (StatusCode::BAD_REQUEST, Json(Err { error: "Body read fail".into(), details: Some(e.to_string()) })))?;
     let mut r = client.request(method, format!("{url}{path}{q}"));
     for (k, v) in hdrs.iter() { if k != "host" { r = r.header(k, v); } }
