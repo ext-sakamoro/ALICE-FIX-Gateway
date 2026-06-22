@@ -134,23 +134,29 @@ async fn send(
     }
 
     let seq_num = {
-        let mut lock = state.seq_num.lock().map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+        let mut lock = state
+            .seq_num
+            .lock()
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
         *lock += 1;
         *lock
     };
 
     // Build FIX wire message (SOH-delimited)
-    let fix_version = req.fields
+    let fix_version = req
+        .fields
         .get("BeginString")
         .cloned()
         .unwrap_or_else(|| "FIX.4.4".to_string());
 
-    let sender = req.fields
+    let sender = req
+        .fields
         .get("SenderCompID")
         .cloned()
         .unwrap_or_else(|| "ALICE".to_string());
 
-    let target = req.fields
+    let target = req
+        .fields
         .get("TargetCompID")
         .cloned()
         .unwrap_or_else(|| "BROKER".to_string());
@@ -197,7 +203,11 @@ async fn parse(
     let mut msg_type = "Unknown".to_string();
 
     // FIX messages use SOH (0x01) as field delimiter; accept both \x01 and |
-    let delimiter = if req.raw_message.contains('\x01') { '\x01' } else { '|' };
+    let delimiter = if req.raw_message.contains('\x01') {
+        '\x01'
+    } else {
+        '|'
+    };
 
     for segment in req.raw_message.split(delimiter) {
         if segment.is_empty() {
@@ -236,11 +246,7 @@ async fn parse(
 }
 
 async fn sessions(State(state): State<AppState>) -> Json<SessionsResponse> {
-    let sessions = state
-        .sessions
-        .lock()
-        .map(|s| s.clone())
-        .unwrap_or_default();
+    let sessions = state.sessions.lock().map(|s| s.clone()).unwrap_or_default();
     let count = sessions.len();
     Json(SessionsResponse { sessions, count })
 }
@@ -450,7 +456,18 @@ fn build_fix_message(
     );
 
     // Append caller-supplied fields (skip header fields already set)
-    let skip_keys = ["BeginString", "SenderCompID", "TargetCompID", "MsgSeqNum", "SendingTime", "35", "49", "56", "34", "52"];
+    let skip_keys = [
+        "BeginString",
+        "SenderCompID",
+        "TargetCompID",
+        "MsgSeqNum",
+        "SendingTime",
+        "35",
+        "49",
+        "56",
+        "34",
+        "52",
+    ];
     for (k, v) in extra_fields {
         if !skip_keys.contains(&k.as_str()) {
             body.push_str(&format!("{k}={v}{soh}"));
