@@ -22,7 +22,6 @@ Thumbs.db
 coverage/
 export-data/
 redis-data/
-CLAUDE.md
 
 # TypeScript incremental build cache
 *.tsbuildinfo
