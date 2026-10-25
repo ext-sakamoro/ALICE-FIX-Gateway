@@ -160,7 +160,7 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="border-t border-white/10 px-6 py-8 text-center text-xs text-gray-600">
-        ALICE FIX Gateway — AGPL-3.0 — For electronic trading infrastructure use only.
+        ALICE FIX Gateway — LicenseRef-Proprietary — For electronic trading infrastructure use only.
       </footer>
     </main>
   );

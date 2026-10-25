@@ -2,8 +2,6 @@
 
 FIX protocol gateway for electronic trading — message routing, protocol validation, and session management.
 
-**License: AGPL-3.0**
-
 ---
 
 ## Architecture
